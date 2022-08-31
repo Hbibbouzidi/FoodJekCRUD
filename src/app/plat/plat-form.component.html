@@ -1,0 +1,72 @@
+<form novalidate (ngSubmit)="savePlat()" [formGroup]="restaurantForm">
+  <mat-card>
+
+    <mat-toolbar style="background-color: #FFF">
+      <mat-toolbar-row>
+        <span class="view-card-title"> {{pageTitle}}</span>
+        <span class="title-spacer"></span>
+        <mat-card-actions>
+          <button mat-mini-fab class="primary" style="margin-right:10px; background-color:darkgray" type="submit"
+            [disabled]='!restaurantForm.valid'>
+            <mat-icon>save</mat-icon>
+          </button>
+          <button mat-mini-fab class="" style="margin-right:10px; " [routerLink]="['/plats']">
+            <mat-icon>cancel</mat-icon>
+          </button>
+
+        </mat-card-actions>
+
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-card-content style="margin: 5 0 5 10px;">
+
+      <div class="form-card">
+        <mat-grid-list cols="12" rowHeight="80px">
+          <mat-grid-tile [colspan]="fieldColspan">
+            <!-- colspan="4"> -->
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput id="nameId" type="text" placeholder="Name (required)"
+                formControlName="name" />
+              <mat-error *ngIf="displayMessage.name">
+                {{displayMessage.name}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Description</mat-label>
+              <input matInput id="descriptionId" type="text" placeholder="Description (required)"
+                formControlName="description" />
+              <mat-error *ngIf="displayMessage.description">
+                {{displayMessage.description}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Price</mat-label>
+              <input matInput id="price" type="number" placeholder="0.0" formControlName="price" />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Restaurant</mat-label>
+              <input matInput id="restaurant" type="text" placeholder="Restaurant" formControlName="restaurant" />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Image</mat-label>
+              <input matInput id="image" type="text" placeholder="Image" formControlName="image" />
+              <mat-error *ngIf="displayMessage.image">
+                {{displayMessage.email}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

@@ -1,0 +1,85 @@
+<form novalidate (ngSubmit)="saveLivreur()" [formGroup]="livreurForm">
+  <mat-card>
+
+    <mat-toolbar style="background-color: #FFF">
+      <mat-toolbar-row>
+        <span class="view-card-title"> {{pageTitle}}</span>
+        <span class="title-spacer"></span>
+        <mat-card-actions>
+          <button mat-mini-fab class="primary" style="margin-right:10px; background-color:darkgray" type="submit"
+            [disabled]='!livreurForm.valid'>
+            <mat-icon>save</mat-icon>
+          </button>
+          <button mat-mini-fab class="" style="margin-right:10px; " [routerLink]="['/livreurs']">
+            <mat-icon>cancel</mat-icon>
+          </button>
+
+        </mat-card-actions>
+
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-card-content style="margin: 5 0 5 10px;">
+
+      <div class="form-card">
+        <mat-grid-list cols="12" rowHeight="80px">
+          <mat-grid-tile [colspan]="fieldColspan">
+            <!-- colspan="4"> -->
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label> CIN</mat-label>
+              <input matInput id="cin" type="number" placeholder="CIN (required)"
+                formControlName="cin" />
+              <mat-error *ngIf="displayMessage.cin">
+                {{displayMessage.cin}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input matInput id="firstnameId" type="text" placeholder="FirstName (required)"
+                formControlName="firstname" />
+              <mat-error *ngIf="displayMessage.firstname">
+                {{displayMessage.firstname}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input matInput id="lastnameId" type="text" placeholder="LastName (required)"
+                formControlName="lastname" />
+              <mat-error *ngIf="displayMessage.lastname">
+                {{displayMessage.lastname}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Address</mat-label>
+              <input matInput id="addressId" type="text" placeholder="Address (required)"
+                formControlName="address" />
+              <mat-error *ngIf="displayMessage.address">
+                {{displayMessage.address}}
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Phone</mat-label>
+              <input matInput id="tel" type="text" placeholder="Phone" formControlName="tel" />
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Latitude</mat-label>
+              <input matInput id="latitude" type="number" placeholder="0" formControlName="latitude"/>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="fieldColspan">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Longitude</mat-label>
+              <input matInput id="longitude" type="number" placeholder="0" formControlName="longitude"/>
+            </mat-form-field>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>
