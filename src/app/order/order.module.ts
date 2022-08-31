@@ -9,7 +9,7 @@ import { ProductDialogComponent } from "./product-dialog.component";
 import { OrderService } from "./order.service";
 import { SharedModule } from "../shared/shared.module";
 import { MaterialModule } from "../shared/material.module";
-import { CustomerService } from '../customer';
+import { CustomerService } from '../customers';
 import { ProductService } from '../product';
 @NgModule({
   imports: [

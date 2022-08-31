@@ -15,7 +15,7 @@ import { ProductService } from '../product';
 
 import { NumberValidators } from '../shared/number.validator';
 import { GenericValidator } from '../shared/generic-validator';
-import { CustomerService, Customer } from "../customer";
+import { CustomerService, Customer } from "../customers";
 
 @Component({
     templateUrl: './product-dialog.component.html',

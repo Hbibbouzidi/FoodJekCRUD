@@ -33,7 +33,7 @@ const routes: Routes = [
   {
     path: "customers",
     loadChildren: () =>
-    import('./customer/customer.module').then(m => m.CustomerModule)
+    import('./customers/customer.module').then(m => m.CustomerModule)
     , canActivate: [AuthGuard]
   },
   {
@@ -58,6 +58,12 @@ const routes: Routes = [
     path: "livreurs",
     loadChildren: () =>
     import('./livreur/livreur.module').then(m => m.LivreurModule)
+    , canActivate: [AuthGuard]
+  },
+  {
+    path: "plats",
+    loadChildren: () =>
+    import('./plat/plat.module').then(m => m.PlatModule)
     , canActivate: [AuthGuard]
   },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

@@ -1,5 +1,5 @@
 /* Defines the order entity */
-import { Customer } from "../customer";
+import { Customer } from "../customers";
 import { Product } from "../product";
 
 export interface IOrder {

@@ -27,7 +27,7 @@ import { OrderService } from "./order.service";
 
 import { NumberValidators } from "../shared/number.validator";
 import { GenericValidator } from "../shared/generic-validator";
-import { CustomerService, Customer } from "../customer";
+import { CustomerService, Customer } from "../customers";
 import { MatDialog } from '@angular/material/dialog';
 import { ProductDialogComponent } from "./product-dialog.component";
 import { ConfirmDialog } from "../shared";
