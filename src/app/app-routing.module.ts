@@ -48,6 +48,18 @@ const routes: Routes = [
     import('./product/product.module').then(m => m.ProductModule)
     , canActivate: [AuthGuard]
   },
+  {
+    path: "restaurants",
+    loadChildren: () =>
+    import('./restaurant/restaurant.module').then(m => m.RestaurantModule)
+    , canActivate: [AuthGuard]
+  },
+  {
+    path: "livreurs",
+    loadChildren: () =>
+    import('./livreur/livreur.module').then(m => m.LivreurModule)
+    , canActivate: [AuthGuard]
+  },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: "**",

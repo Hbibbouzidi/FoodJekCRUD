@@ -27,7 +27,7 @@ import { AuthGuard } from './_guard';
     NotFoundPageComponent,
     ConfirmDialog,
     LoadingComponent,
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
