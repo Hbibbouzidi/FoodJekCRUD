@@ -8,45 +8,45 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 
-import { Livreur } from './livreur';
+import { Customer } from './customer';
 
 @Injectable()
-export class LivreurService {
-  private basicAction = 'livreur/';
+export class CustomerService {
+  private basicAction = 'customer/';
 
   constructor(private http: HttpClient, private backend: BackendService) { }
 
-  getLivreurs(): Observable<Livreur[]> {
-    return this.http.get<Livreur[]>('http://192.168.43.247:8080/livreur');
+  getCustomers(): Observable<Customer[]> {
+    return this.http.get<Customer[]>('http://192.168.43.247:8080/customer');
   }
 
-  getLivreur(id: number): Observable<Livreur> {
-    return this.http.get<Livreur>(`http://192.168.43.247:8080/livreur/${id}`);
+  getCustomer(id: number): Observable<Customer> {
+    return this.http.get<Customer>(`http://192.168.43.247:8080/customer/${id}`);
   }
 
-  deleteLivreur(id: number): Observable<Response> {
+  deleteCustomer(id: number): Observable<Response> {
 
     const action = `${this.basicAction}${id}`;
-    return this.http.delete<Response>(`http://192.168.43.247:8080/livreur/${id}`).catch(this.handleError);
+    return this.http.delete<Response>(`http://192.168.43.247:8080/customer/${id}`).catch(this.handleError);
   }
 
-  saveLivreur(livreur: Livreur): Observable<Livreur> {
+  saveCustomer(customer: Customer): Observable<Customer> {
 
 
-    if (livreur.id === 0) {
-      return this.createLivreur(livreur);
+    if (customer.id === 0) {
+      return this.createCustomer(customer);
     }
-    return this.updateLivreur(livreur);
+    return this.updateCustomer(customer);
   }
 
-  private createLivreur(r: Livreur): Observable<Livreur> {
+  private createCustomer(r: Customer): Observable<Customer> {
     r.id = undefined;
-    return this.http.post<Livreur>('http://192.168.43.247:8080/livreur', r)
+    return this.http.post<Customer>('http://192.168.43.247:8080/customer', r)
       .catch(this.handleError);
   }
 
-  private updateLivreur(r: Livreur): Observable<Livreur> {
-    return this.http.put<Livreur>('http://192.168.43.247:8080/Livreur', r)
+  private updateCustomer(r: Customer): Observable<Customer> {
+    return this.http.put<Customer>('http://192.168.43.247:8080/customer', r)
       .catch(this.handleError);
   }
 
@@ -62,11 +62,10 @@ export class LivreurService {
     return Observable.throw(error.json() || 'Server error');
   }
 
-  initializeLivreur(): Livreur {
+  initializeCustomer(): Customer {
     // Return an initialized object
     return {
       id: 0,
-      cin: 0,
       firstname: null,
       lastname: null,
       address: null,

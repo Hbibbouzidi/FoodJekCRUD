@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, CanDeactivate } from '@angular/router';
 
-import { LivreurFormComponent } from './livreur-form.component';
+import { CustomerFormComponent } from './customer-form.component';
 
 @Injectable()
-export  class LivreurDetailGuard implements CanActivate {
+export  class CustomerDetailGuard implements CanActivate {
 
     constructor(private router: Router) {
     }
@@ -12,9 +12,9 @@ export  class LivreurDetailGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot): boolean {
         let id = +route.url[1].path;
         if (isNaN(id) || id < 1) {
-            alert('Invalid livreur Id');
+            alert('Invalid customer Id');
             // start a new navigation to redirect to list page
-            this.router.navigate(['/livreurs']);
+            this.router.navigate(['/customers']);
             // abort current navigation
             return false;
         };
@@ -23,11 +23,11 @@ export  class LivreurDetailGuard implements CanActivate {
 }
 
 @Injectable()
-export  class LivreurEditGuard implements CanDeactivate<LivreurFormComponent> {
+export  class CustomerEditGuard implements CanDeactivate<CustomerFormComponent> {
 
-    canDeactivate(component: LivreurFormComponent): boolean {
-        if (component.livreurForm.dirty) {
-            let name = component.livreurForm.get('firstname').value || 'New Livreur';
+    canDeactivate(component: CustomerFormComponent): boolean {
+        if (component.customerForm.dirty) {
+            let name = component.customerForm.get('firstname').value || 'New Customer';
             return confirm(`Navigate away and lose all changes to ${name}?`);
         }
         return true;

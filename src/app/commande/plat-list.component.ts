@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { Livreur } from './livreur';
-import { LivreurService } from './livreur.service';
+import { Plat } from './plat';
+import { PlatService } from './plat.service';
 import { PagerService } from '../_services';
 import { ConfirmDialog } from '../shared';
 import * as _ from 'lodash';
@@ -14,39 +14,39 @@ import { MatTableDataSource } from '@angular/material/table';
 
 
 @Component({
-    selector: 'livreur-list',
-    templateUrl: './livreur-list.component.html',
-    styleUrls: ['./livreur-list.component.css'],
+    selector: 'plat-list',
+    templateUrl: './plat-list.component.html',
+    styleUrls: ['./plat-list.component.css'],
     providers: [ConfirmDialog]
 })
-export class LivreurListComponent implements OnInit {
+export class PlatListComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
 
-    pageTitle: string = 'Livreurs';
+    pageTitle: string = 'Plats';
     imageWidth: number = 30;
     imageMargin: number = 2;
     showImage: boolean = false;
     listFilter: any = {};
     errorMessage: string;
 
-    livreurs: Livreur[];
-    livreurList: Livreur[]; //
-    displayedColumns = ["cin","firstname","lastname", "address", "tel", "latitude","longitude", "id"];
+    plats: Plat[];
+    platList: Plat[]; //
+    displayedColumns = ["name", "description", "price", "image", "restaurant", "id"];
     dataSource: any = null;
     pager: any = {};
     pagedItems: any[];
     searchFilter: any = {
-        cin: "",
-        firstname: "",
-        address: ""
+        name: "",
+        description: "",
+        price: ""
     };
     selectedOption: string;
 
 
     constructor(
-        private livreurService: LivreurService,
+        private platService: PlatService,
         // private pagerService: PagerService,
         public dialog: MatDialog,
         public snackBar: MatSnackBar) {
@@ -58,18 +58,23 @@ export class LivreurListComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    freshDataList(livreurs: Livreur[]) {
-        this.livreurs = livreurs;
+    freshDataList(plats: Plat[]) {
+        this.plats = plats;
 
-        this.dataSource = new MatTableDataSource(this.livreurs);
+        this.platList = plats.map(e => {
+            const plat = e;
+            e["restaurantName"] = e["restaurant"]["restaurantName"];
+            return plat;
+        });
+        this.dataSource = new MatTableDataSource(this.plats);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
 
     ngOnInit(): void {
-        this.livreurService.getLivreurs()
-            .subscribe(livreurs => {
-                this.freshDataList(livreurs);
+        this.platService.getPlats()
+            .subscribe(plats => {
+                this.freshDataList(plats);
             },
             error => this.errorMessage = <any>error);
 
@@ -77,30 +82,30 @@ export class LivreurListComponent implements OnInit {
         this.listFilter = {};
     }
 
-    getLivreurs(pageNum?: number) {
-        this.livreurService.getLivreurs()
-            .subscribe(livreurs => {
-                this.freshDataList(livreurs);
+    getPlats(pageNum?: number) {
+        this.platService.getPlats()
+            .subscribe(plats => {
+                this.freshDataList(plats);
             },
             error => this.errorMessage = <any>error);
     }
 
-    searchLivreurs(filters: any) {
+    searchPlats(filters: any) {
         if (filters) {
-            this.livreurService.getLivreurs()
-                .subscribe(livreurs => {
-                    this.livreurs = livreurs;
-                    console.log(this.livreurs.length)
-                    this.livreurs = this.livreurs.filter((livreur: Livreur) => {
+            this.platService.getPlats()
+                .subscribe(plats => {
+                    this.plats = plats;
+                    console.log(this.plats.length)
+                    this.plats = this.plats.filter((plat: Plat) => {
                         let match = true;
 
                         Object.keys(filters).forEach((k) => {
                             match = match && filters[k] ?
-                                livreur[k].toLocaleLowerCase().indexOf(filters[k].toLocaleLowerCase()) > -1 : match;
+                                plat[k].toLocaleLowerCase().indexOf(filters[k].toLocaleLowerCase()) > -1 : match;
                         })
                         return match;
                     });
-                    this.freshDataList(livreurs);
+                    this.freshDataList(plats);
                 },
                 error => this.errorMessage = <any>error);
         }
@@ -109,20 +114,20 @@ export class LivreurListComponent implements OnInit {
 
     resetListFilter() {
         this.listFilter = {};
-        this.getLivreurs();
+        this.getPlats();
     }
 
     reset() {
         this.listFilter = {};
         this.searchFilter = {};
-        this.getLivreurs();
+        this.getPlats();
 
     }
 
     resetSearchFilter(searchPanel: any) {
         searchPanel.toggle();
         this.searchFilter = {};
-        this.getLivreurs();
+        this.getPlats();
     }
 
     openSnackBar(message: string, action: string) {
@@ -133,7 +138,7 @@ export class LivreurListComponent implements OnInit {
 
     openDialog(id: number) {
         let dialogRef = this.dialog.open(ConfirmDialog,
-            { data: { title: 'Dialog', message: 'Are you sure to delete this item?' } });
+            { data: { title: 'Dialog', message: 'Are you sure to delete this plat?' } });
         dialogRef.disableClose = true;
 
 
@@ -141,19 +146,19 @@ export class LivreurListComponent implements OnInit {
             this.selectedOption = result;
 
             if (this.selectedOption === dialogRef.componentInstance.ACTION_CONFIRM) {
-                this.livreurService.deleteLivreur(id).subscribe(
+                this.platService.deletePlat(id).subscribe(
                     () => {
-                        this.livreurService.getLivreurs()
-                            .subscribe(livreurs => {
-                                this.freshDataList(livreurs);
+                        this.platService.getPlats()
+                            .subscribe(plats => {
+                                this.freshDataList(plats);
                             },
                             error => this.errorMessage = <any>error);
-                        this.openSnackBar("The item has been deleted successfully. ", "Close");
+                        this.openSnackBar("The plat has been deleted successfully. ", "Close");
                     },
                     (error: any) => {
                         this.errorMessage = <any>error;
                         console.log(this.errorMessage);
-                        this.openSnackBar("This item has not been deleted successfully. Please try again.", "Close");
+                        this.openSnackBar("This plat has not been deleted successfully. Please try again.", "Close");
                     }
                 );
             }

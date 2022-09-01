@@ -1,7 +1,6 @@
 /* Defines the customer entity */
-export interface Livreur {
+export interface Customer {
   id: number;
-  cin: number;
   firstname: string;
   lastname: string;
   address: string;

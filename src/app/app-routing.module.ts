@@ -31,9 +31,15 @@ const routes: Routes = [
     , canActivate: [AuthGuard]
   },
   {
-    path: "customers",
+    path: "livreurs",
     loadChildren: () =>
-    import('./customers/customer.module').then(m => m.CustomerModule)
+    import('./livreur/livreur.module').then(m => m.LivreurModule)
+    , canActivate: [AuthGuard]
+  },
+  {
+    path: "customer",
+    loadChildren: () =>
+    import('./customer/customer.module').then(m => m.CustomerModule)
     , canActivate: [AuthGuard]
   },
   {
@@ -55,9 +61,9 @@ const routes: Routes = [
     , canActivate: [AuthGuard]
   },
   {
-    path: "livreurs",
+    path: "customers",
     loadChildren: () =>
-    import('./livreur/livreur.module').then(m => m.LivreurModule)
+    import('./customer/customer.module').then(m => m.CustomerModule)
     , canActivate: [AuthGuard]
   },
   {

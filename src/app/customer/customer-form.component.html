@@ -1,4 +1,4 @@
-<form novalidate (ngSubmit)="saveLivreur()" [formGroup]="livreurForm">
+<form novalidate (ngSubmit)="saveCustomer()" [formGroup]="customerForm">
   <mat-card>
 
     <mat-toolbar style="background-color: #FFF">
@@ -7,10 +7,10 @@
         <span class="title-spacer"></span>
         <mat-card-actions>
           <button mat-mini-fab class="primary" style="margin-right:10px; background-color:darkgray" type="submit"
-            [disabled]='!livreurForm.valid'>
+            [disabled]='!customerForm.valid'>
             <mat-icon>save</mat-icon>
           </button>
-          <button mat-mini-fab class="" style="margin-right:10px; " [routerLink]="['/livreurs']">
+          <button mat-mini-fab class="" style="margin-right:10px; " [routerLink]="['/customers']">
             <mat-icon>cancel</mat-icon>
           </button>
 
@@ -25,14 +25,7 @@
         <mat-grid-list cols="12" rowHeight="80px">
           <mat-grid-tile [colspan]="fieldColspan">
             <!-- colspan="4"> -->
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label> CIN</mat-label>
-              <input matInput id="cin" type="number" placeholder="CIN (required)"
-                formControlName="cin" />
-              <mat-error *ngIf="displayMessage.cin">
-                {{displayMessage.cin}}
-              </mat-error>
-            </mat-form-field>
+            
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>First Name</mat-label>
               <input matInput id="firstnameId" type="text" placeholder="FirstName (required)"

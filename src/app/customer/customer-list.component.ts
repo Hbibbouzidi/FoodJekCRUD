@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { Plat } from './plat';
-import { PlatService } from './plat.service';
+import { Customer } from './customer';
+import { CustomerService } from './customer.service';
 import { PagerService } from '../_services';
 import { ConfirmDialog } from '../shared';
 import * as _ from 'lodash';
@@ -14,39 +14,39 @@ import { MatTableDataSource } from '@angular/material/table';
 
 
 @Component({
-    selector: 'plat-list',
-    templateUrl: './plat-list.component.html',
-    styleUrls: ['./plat-list.component.css'],
+    selector: 'customer-list',
+    templateUrl: './customer-list.component.html',
+    styleUrls: ['./customer-list.component.css'],
     providers: [ConfirmDialog]
 })
-export class PlatListComponent implements OnInit {
+export class CustomerListComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
 
-    pageTitle: string = 'Plats';
+    pageTitle: string = 'Customers';
     imageWidth: number = 30;
     imageMargin: number = 2;
     showImage: boolean = false;
     listFilter: any = {};
     errorMessage: string;
 
-    plats: Plat[];
-    platList: Plat[]; //
-    displayedColumns = ["name", "description", "price", "image", "restaurant", "id"];
+    customers: Customer[];
+    custoemrList: Customer[]; //
+    displayedColumns = ["firstname","lastname", "address", "tel", "latitude","longitude", "id"];
     dataSource: any = null;
     pager: any = {};
     pagedItems: any[];
     searchFilter: any = {
-        name: "",
-        description: "",
-        price: ""
+        firstname: "",
+        lastname: "",
+        address: ""
     };
     selectedOption: string;
 
 
     constructor(
-        private platService: PlatService,
+        private customerService: CustomerService,
         // private pagerService: PagerService,
         public dialog: MatDialog,
         public snackBar: MatSnackBar) {
@@ -58,23 +58,18 @@ export class PlatListComponent implements OnInit {
         this.dataSource.filter = filterValue;
     }
 
-    freshDataList(plats: Plat[]) {
-        this.plats = plats;
+    freshDataList(customers: Customer[]) {
+        this.customers = customers;
 
-        this.platList = plats.map(e => {
-            const plat = e;
-            e["restaurantName"] = e["restaurant"]["restaurantName"];
-            return plat;
-        });
-        this.dataSource = new MatTableDataSource(this.plats);
+        this.dataSource = new MatTableDataSource(this.customers);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
 
     ngOnInit(): void {
-        this.platService.getPlats()
-            .subscribe(plats => {
-                this.freshDataList(plats);
+        this.customerService.getCustomers()
+            .subscribe(customers => {
+                this.freshDataList(customers);
             },
             error => this.errorMessage = <any>error);
 
@@ -82,30 +77,30 @@ export class PlatListComponent implements OnInit {
         this.listFilter = {};
     }
 
-    getPlats(pageNum?: number) {
-        this.platService.getPlats()
-            .subscribe(plats => {
-                this.freshDataList(plats);
+    getCustomers(pageNum?: number) {
+        this.customerService.getCustomers()
+            .subscribe(customers => {
+                this.freshDataList(customers);
             },
             error => this.errorMessage = <any>error);
     }
 
-    searchPlats(filters: any) {
+    searchCustomers(filters: any) {
         if (filters) {
-            this.platService.getPlats()
-                .subscribe(plats => {
-                    this.plats = plats;
-                    console.log(this.plats.length)
-                    this.plats = this.plats.filter((plat: Plat) => {
+            this.customerService.getCustomers()
+                .subscribe(customers => {
+                    this.customers = customers;
+                    console.log(this.customers.length)
+                    this.customers = this.customers.filter((customer: Customer) => {
                         let match = true;
 
                         Object.keys(filters).forEach((k) => {
                             match = match && filters[k] ?
-                                plat[k].toLocaleLowerCase().indexOf(filters[k].toLocaleLowerCase()) > -1 : match;
+                                customer[k].toLocaleLowerCase().indexOf(filters[k].toLocaleLowerCase()) > -1 : match;
                         })
                         return match;
                     });
-                    this.freshDataList(plats);
+                    this.freshDataList(customers);
                 },
                 error => this.errorMessage = <any>error);
         }
@@ -114,20 +109,20 @@ export class PlatListComponent implements OnInit {
 
     resetListFilter() {
         this.listFilter = {};
-        this.getPlats();
+        this.getCustomers();
     }
 
     reset() {
         this.listFilter = {};
         this.searchFilter = {};
-        this.getPlats();
+        this.getCustomers();
 
     }
 
     resetSearchFilter(searchPanel: any) {
         searchPanel.toggle();
         this.searchFilter = {};
-        this.getPlats();
+        this.getCustomers();
     }
 
     openSnackBar(message: string, action: string) {
@@ -138,7 +133,7 @@ export class PlatListComponent implements OnInit {
 
     openDialog(id: number) {
         let dialogRef = this.dialog.open(ConfirmDialog,
-            { data: { title: 'Dialog', message: 'Are you sure to delete this plat?' } });
+            { data: { title: 'Dialog', message: 'Are you sure to delete this customer?' } });
         dialogRef.disableClose = true;
 
 
@@ -146,19 +141,19 @@ export class PlatListComponent implements OnInit {
             this.selectedOption = result;
 
             if (this.selectedOption === dialogRef.componentInstance.ACTION_CONFIRM) {
-                this.platService.deletePlat(id).subscribe(
+                this.customerService.deleteCustomer(id).subscribe(
                     () => {
-                        this.platService.getPlats()
-                            .subscribe(plats => {
-                                this.freshDataList(plats);
+                        this.customerService.getCustomers()
+                            .subscribe(customers => {
+                                this.freshDataList(customers);
                             },
                             error => this.errorMessage = <any>error);
-                        this.openSnackBar("The plat has been deleted successfully. ", "Close");
+                        this.openSnackBar("The customer has been deleted successfully. ", "Close");
                     },
                     (error: any) => {
                         this.errorMessage = <any>error;
                         console.log(this.errorMessage);
-                        this.openSnackBar("This plat has not been deleted successfully. Please try again.", "Close");
+                        this.openSnackBar("This customer has not been deleted successfully. Please try again.", "Close");
                     }
                 );
             }

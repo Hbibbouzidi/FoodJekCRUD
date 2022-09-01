@@ -8,8 +8,8 @@ import 'rxjs/add/observable/merge';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Livreur } from './livreur';
-import { LivreurService } from './livreur.service';
+import { Plat } from './plat';
+import { PlatService } from './plat.service';
 
 import { NumberValidators } from '../shared/number.validator';
 import { GenericValidator } from '../shared/generic-validator';
@@ -17,8 +17,8 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 
 
 @Component({
-    selector: 'livreur-form',
-    templateUrl: './livreur-form.component.html',
+    selector: 'plat-form',
+    templateUrl: './plat-form.component.html',
     styles: [`
     .title-spacer {
         flex: 1 1 auto;
@@ -36,13 +36,13 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
     }
     `]
 })
-export class LivreurFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PlatFormComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
-    pageTitle: string = 'Update Livreur';
+    pageTitle: string = 'Update Plat';
     errorMessage: string;
-    livreurForm: FormGroup;
-    livreur: Livreur = <Livreur>{};
+    platForm: FormGroup;
+    plat: Plat = <Plat>{};
     private sub: Subscription;
     showImage: boolean;
     imageWidth: number = 100;
@@ -56,27 +56,27 @@ export class LivreurFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
     private validationMessages: { [key: string]: { [key: string]: string } | {} } = {
-        firstname: {
-            required: 'Livreur name is required.',
-            minlength: 'Livreur name must be at least one characters.',
-            maxlength: 'Livreur name cannot exceed 100 characters.'
+        name: {
+            required: 'Plat name is required.',
+            minlength: 'Plat name must be at least one characters.',
+            maxlength: 'Plat name cannot exceed 100 characters.'
         },
-        address: {
-            required: 'Livreur address is required.',
-            minlength: 'Livreur address must be at least one characters.',
-            maxlength: 'Livreur address cannot exceed 100 characters.'
+        description: {
+            required: 'Plat descriptio is required.',
+            minlength: 'Plat description must be at least one characters.',
+            maxlength: 'Plat description cannot exceed 100 characters.'
         },
-        cin: {
-            required: 'Livreur cin is required.',
-            minlength: 'Livreur cin must be at least one characters.',
-            maxlength: 'Livreur cin cannot exceed 200 characters.'
+        price: {
+            required: 'Plat price is required.',
+            minlength: 'Plat price must be at least one characters.',
+            maxlength: 'Plat price cannot exceed 200 characters.'
         }
     };
 
     constructor(private fb: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private livreurService: LivreurService,
+        private platService: PlatService,
         private breakpointObserver: BreakpointObserver
     ) {
         breakpointObserver.observe([
@@ -91,17 +91,17 @@ export class LivreurFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.livreurForm = this.fb.group({
+        this.platForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-            address: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-            cin: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+            description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+            price: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
         });
 
         // Read the customer Id from the route parameter
         this.sub = this.route.params.subscribe(
             params => {
                 let id = +params['id'];
-                this.getLivreur(id);
+                this.getPlat(id);
             }
         );
 
@@ -118,50 +118,48 @@ export class LivreurFormComponent implements OnInit, AfterViewInit, OnDestroy {
             .map((formControl: ElementRef) => Observable.fromEvent(formControl.nativeElement, 'blur'));
 
         // Merge the blur event observable with the valueChanges observable
-        Observable.merge(this.livreurForm.valueChanges, ...controlBlurs).debounceTime(500).subscribe(value => {
-            this.displayMessage = this.genericValidator.processMessages(this.livreurForm);
+        Observable.merge(this.platForm.valueChanges, ...controlBlurs).debounceTime(500).subscribe(value => {
+            this.displayMessage = this.genericValidator.processMessages(this.platForm);
         });
     }
 
-    getLivreur(id: number): void {
-        this.livreurService.getLivreur(id)
+    getPlat(id: number): void {
+        this.platService.getPlat(id)
             .subscribe(
-                (livreur: Livreur) => this.onLivreurRetrieved(livreur),
+                (plat: Plat) => this.onPlatRetrieved(plat),
                 (error: any) => this.errorMessage = <any>error
             );
     }
 
-    onLivreurRetrieved(livreur: Livreur): void {
-        if (this.livreurForm) {
-            this.livreurForm.reset();
+    onPlatRetrieved(plat: Plat): void {
+        if (this.platForm) {
+            this.platForm.reset();
         }
-        this.livreur = livreur;
+        this.plat = plat;
 
-        if (this.livreur.id === 0) {
-            this.pageTitle = 'New Livreur';
+        if (this.plat.id === 0) {
+            this.pageTitle = 'New Plat';
         } else {
-            this.pageTitle = `Livreur: ${this.livreur.firstname} ${this.livreur.lastname}`;
+            this.pageTitle = `Plat : ${this.plat.name} ${this.plat.description}`;
         }
 
         // Update the data on the form
-        this.livreurForm.patchValue({
-            cin: this.livreur.cin,
-            firstname: this.livreur.firstname,
-            lastname: this.livreur.lastname,
-            address: this.livreur.address,
-            tel: this.livreur.tel,
-            latitude: this.livreur.latitude,
-            longitude: this.livreur.longitude
+        this.platForm.patchValue({
+            name: this.plat.name,
+            description: this.plat.description,
+            price: this.plat.price,
+            image: this.plat.image,
+            restaurant: this.plat.restaurant
         });
     }
 
-    deleteLivreur(): void {
-        if (this.livreur.id === 0) {
+    deletePlat(): void {
+        if (this.plat.id === 0) {
             // Don't delete, it was never saved.
             this.onSaveComplete();
         } else {
-            if (confirm(`Really delete the livreur: ${this.livreur.firstname}?`)) {
-                this.livreurService.deleteLivreur(this.livreur.id)
+            if (confirm(`Really delete the plat: ${this.plat.name}?`)) {
+                this.platService.deletePlat(this.plat.id)
                     .subscribe(
                         () => this.onSaveComplete(),
                         (error: any) => this.errorMessage = <any>error
@@ -176,25 +174,25 @@ export class LivreurFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
 
-    saveLivreur(): void {
-        if (this.livreurForm.dirty && this.livreurForm.valid) {
+    savePlat(): void {
+        if (this.platForm.dirty && this.platForm.valid) {
             // Copy the form values over the customer object values
-            const livreur = Object.assign({}, this.livreur, this.livreurForm.value);
+            const plat = Object.assign({}, this.plat, this.platForm.value);
 
-            this.livreurService.saveLivreur(livreur)
+            this.platService.savePlat(plat)
                 .subscribe(
                     () => this.onSaveComplete(),
                     (error: any) => this.errorMessage = <any>error
                 );
-        } else if (!this.livreurForm.dirty) {
+        } else if (!this.platForm.dirty) {
             this.onSaveComplete();
         }
     }
 
     onSaveComplete(): void {
         // Reset the form to clear the flags
-        this.livreurForm.reset();
-        this.router.navigate(['/livreurs']);
+        this.platForm.reset();
+        this.router.navigate(['/plats']);
     }
 
     onScreensizeChange(result: any) {

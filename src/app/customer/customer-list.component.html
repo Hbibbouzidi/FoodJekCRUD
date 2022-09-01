@@ -8,7 +8,7 @@
   </mat-card-header>
   <mat-toolbar class="primary">
     <mat-toolbar-row>
-      <button mat-mini-fab style="margin-right:10px; background-color:#e07c9e" [routerLink]="['/livreurs/edit/', 0]">
+      <button mat-mini-fab style="margin-right:10px; background-color:#e07c9e" [routerLink]="['/customers/edit/', 0]">
         <mat-icon>add</mat-icon>
       </button>
       <button mat-mini-fab style="margin-right:10px; background-color:#a28b6e" (click)="sidenav.toggle()">
@@ -29,45 +29,42 @@
   </mat-toolbar>
 
   <mat-table #table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="cin">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> CIN </mat-header-cell>
-      <mat-cell *matCellDef="let livreur"> {{livreur.cin}} </mat-cell>
-    </ng-container>
+    
     <ng-container matColumnDef="firstname">
       <mat-header-cell *matHeaderCellDef mat-sort-header> First Name </mat-header-cell>
-      <mat-cell *matCellDef="let livreur"> {{livreur.firstname}} </mat-cell>
+      <mat-cell *matCellDef="let customer"> {{customer.firstname}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="lastname">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </mat-header-cell>
-      <mat-cell *matCellDef="let livreur"> {{livreur.lastname}} </mat-cell>
+      <mat-cell *matCellDef="let customer"> {{customer.lastname}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="address">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
-      <mat-cell *matCellDef="let livreur"> {{livreur.address}} </mat-cell>
+      <mat-cell *matCellDef="let customer"> {{customer.address}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="tel">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Tel </mat-header-cell>
-      <mat-cell *matCellDef="let livreur"> {{livreur.tel}} </mat-cell>
+      <mat-cell *matCellDef="let customer"> {{customer.tel}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="latitude">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Latitude </mat-header-cell>
-      <mat-cell *matCellDef="let livreur"> {{livreur.latitude}} </mat-cell>
+      <mat-cell *matCellDef="let customer"> {{customer.latitude}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="longitude">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Longitude </mat-header-cell>
-      <mat-cell *matCellDef="let livreur"> {{livreur.longitude}} </mat-cell>
+      <mat-cell *matCellDef="let customer"> {{customer.longitude}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef style="justify-content:right;">
         <!-- <button mat-button style="color:white; background-color:darkgrey" (click)="resetListFilter()">Reset</button> -->
       </mat-header-cell>
-      <mat-cell *matCellDef="let livreur" style="justify-content:right;">
+      <mat-cell *matCellDef="let customer" style="justify-content:right;">
         <button mat-mini-fab style="background-color:teal; min-height: 30px;   margin: 5px;"
-          [routerLink]="['/livreurs/edit/', livreur.id]">
+          [routerLink]="['/customers/edit/', customer.id]">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-mini-fab style="background-color:lightblue; min-height: 30px;  margin: 5px;"
-          (click)="openDialog(livreur.id)">
+          (click)="openDialog(customer.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </mat-cell>
@@ -92,8 +89,8 @@
   </mat-card>
   <mat-nav-list style="margin-left:50px;">
     <mat-form-field appearance="standard">
-      <mat-label>CIN</mat-label>
-      <input matInput appearance="standard" placeholder="CIN" name="cin"
+      <mat-label>Lastname</mat-label>
+      <input matInput appearance="standard" placeholder="Lastname" name="lastname"
         [(ngModel)]="searchFilter.name" />
     </mat-form-field>
     <mat-form-field appearance="standard">
@@ -111,7 +108,7 @@
   <mat-card-header>
     <mat-action-list>
       <button mat-raised-button style="color:lightgrey; background-color:darkgreen; margin:5px;"
-        (click)="searchLivreurs(searchFilter);sidenav.toggle()">
+        (click)="searchCustomers(searchFilter);sidenav.toggle()">
         <mat-icon>search</mat-icon>Search
       </button>
       <button mat-raised-button style="color:lightgrey; background-color:darkred;margin:5px;"
